@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PropiedadRepository extends JpaRepository<Propiedad, Integer> {
-    // Aquí podrías añadir métodos como: findByTituloContaining(String texto);
+   
 }
