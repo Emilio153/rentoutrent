@@ -1,0 +1,34 @@
+<div class="login-container">
+  <div class="login-card">
+    
+    <h2>RentOutRent</h2>
+    <p>Introduce tus credenciales para continuar</p>
+    
+    <form (submit)="onLogin()">
+      <div class="input-group">
+        <label>Correo Electrónico</label>
+        <input 
+          type="email" 
+          name="email" 
+          [(ngModel)]="email" 
+          placeholder="ejemplo@correo.com" 
+          required>
+      </div>
+      
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="password" 
+          placeholder="********" 
+          required>
+      </div>
+      
+      <button type="submit" class="login-button">
+        Iniciar Sesión en ROR
+      </button>
+    </form>
+
+  </div>
+</div>
