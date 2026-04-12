@@ -48,25 +48,22 @@ export class LoginComponent {
   // 4. FUNCIONES DE CONEXIÓN AL BACKEND
   // ==========================================
   
-  onLogin() {
-    this.authService.login(this.emailLogin, this.passwordLogin).subscribe({
-      next: (respuesta: any) => {
-        console.log('¡Login exitoso!', respuesta);
-        
-        // Guardamos el token
-        localStorage.setItem('jwt_token', respuesta.token);
-        
-        // ¡Magia! Redirigimos al usuario a la vista principal
-        // Descomenta esto cuando tengas el componente creado
-        this.router.navigate(['/propiedades']); 
-        alert('¡Bienvenido! Has iniciado sesión correctamente.');
-      },
-      error: (err) => {
-        console.error('Error en el login', err);
-        alert('Credenciales incorrectas. Revisa tu email y contraseña.');
-      }
-    });
-  }
+onLogin() {
+  this.authService.login(this.emailLogin, this.passwordLogin).subscribe({
+    next: (respuesta: any) => {
+      // Usamos el nuevo método reactivo
+      this.authService.iniciarSesion(respuesta.token);
+      
+      // Limpiamos los campos visuales para que no se queden atascados
+      this.emailLogin = '';
+      this.passwordLogin = '';
+      
+      // Adiós a las alertas molestas, navegamos directamente
+      this.router.navigate(['/catalogo']); 
+    },
+    error: (err) => alert('Credenciales incorrectas')
+  });
+}
 
   onRegister() {
     // IMPORTANTE: Asegúrate de que tu AuthService de Angular tenga un método register()

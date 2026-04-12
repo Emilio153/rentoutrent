@@ -25,6 +25,7 @@
           <input type="password" name="confirmPassword" [(ngModel)]="registro.confirmPassword" placeholder="Confirmar contraseña" required>
         </div>
         <button type="submit" class="login-button">Registrarse</button>
+        <p class="mobile-toggle" (click)="togglePanel()">¿Aún no estas Registrado?</p>
       </form>
     </div>
 
@@ -41,6 +42,7 @@
         </div>
         
         <button type="submit" class="login-button">Iniciar Sesión en ROR</button>
+        <p class="mobile-toggle" (click)="togglePanel()">Iniciar Sesion</p>
       </form>
     </div>
 

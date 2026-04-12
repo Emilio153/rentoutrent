@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from 'd:/RentOutRent/FRONT/alquiler-frontend/src/app/auth'; // Ajusta tu ruta
+import { AuthService } from '../../auth';
 
 @Component({
   selector: 'app-navbar',
@@ -13,17 +13,22 @@ import { AuthService } from 'd:/RentOutRent/FRONT/alquiler-frontend/src/app/auth
 export class Navbar {
   private authService = inject(AuthService);
   private router = inject(Router);
+  
+  
+  estaLogueado: boolean = false;
 
-  // Getter para saber si hay alguien logueado
-  get estaLogueado(): boolean {
-    return this.authService.isLoggedIn();
+  constructor() {
+    // Escucha en tiempo real si el usuario entra o sale
+    this.authService.isLoggedIn$.subscribe(status => {
+      this.estaLogueado = status;
+    });
   }
 
   // Getter para sacar el rol del token
   get esPropietario(): boolean {
     const rol = this.authService.getRolUsuario();
     // Aquí pon la palabra exacta que te salga en jwt.io. Normalmente es 'PROPIETARIO' o 'ROLE_PROPIETARIO'
-    return rol === 'PROPIETARIO' || rol === 'ROLE_PROPIETARIO';
+    return rol === 'PROPIETARIO';
   }
 
   cerrarSesion() {

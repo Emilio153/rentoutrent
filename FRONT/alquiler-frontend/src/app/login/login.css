@@ -218,3 +218,51 @@ h2 {
         z-index: 5;
     }
 }
+/* Ocultamos el elemento en PC */
+.mobile-toggle {
+    display: none;
+}
+
+/* =========================================
+   📱 MEDIA QUERY PARA MÓVILES (Menos de 768px)
+   ========================================= */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        min-height: auto;
+        padding: 40px 0;
+    }
+    
+    /* Ocultamos el bloque superpuesto de colores */
+    .overlay-container {
+        display: none; 
+    }
+    
+    /* Hacemos que los formularios ocupen el 100% y anulamos las animaciones de PC */
+    .sign-in-container, .sign-up-container {
+        width: 100%;
+        position: relative;
+        opacity: 1;
+        transform: none;
+        z-index: 1;
+        left: 0;
+        transition: none;
+    }
+    
+    /* Lógica de visibilidad móvil: Mostramos solo el activo */
+    .sign-in-container { display: flex; }
+    .container.right-panel-active .sign-in-container { display: none; }
+    
+    .sign-up-container { display: none; }
+    .container.right-panel-active .sign-up-container { display: flex; }
+
+    /* Mostramos el botón de texto para cambiar en móvil */
+    .mobile-toggle {
+        display: block;
+        color: #C0C0C0;
+        margin-top: 20px;
+        cursor: pointer;
+        text-decoration: underline;
+        font-size: 0.9rem;
+    }
+}

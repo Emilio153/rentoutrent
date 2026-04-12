@@ -106,4 +106,29 @@ public String register(RegisterRequest request) {
         // return new LoginResponse("nuevo_token_generado");
         throw new UnsupportedOperationException("Refresh Token en construcción para la V2");
     }
+ // ==========================================
+    // 4. LÓGICA DE ASCENSO A PROPIETARIO
+    // ==========================================
+    public LoginResponse ascenderAPropietario(String email) {
+        // 1. Buscamos al usuario (usando tu método que devuelve null si no existe)
+        com.daw.alquiler.persistence.entities.Persona usuario = personaRepository.findByEmail(email);
+        
+        if (usuario == null) {
+            throw new IllegalArgumentException("Usuario no encontrado con el email: " + email);
+        }
+
+        // 2. Le cambiamos el rol al Enum
+        usuario.setTipoUsuario(com.daw.alquiler.persistence.entities.enums.TipoUsuario.PROPIETARIO);
+        
+        // 3. Guardamos los cambios
+        personaRepository.save(usuario);
+
+        // 4. Generamos el nuevo token.
+        // OJO: Asumo que tu entidad Persona implementa la interfaz UserDetails de Spring Security.
+        String nuevoToken = jwtUtils.generateToken((UserDetails) usuario);
+
+        // 5. Devolvemos el mismo DTO que usas en el Login
+        return new LoginResponse(nuevoToken);
+    }
+    
 }

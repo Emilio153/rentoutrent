@@ -55,4 +55,29 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("{\"error\": \"" + e.getMessage() + "\"}");
     }
+    
+ // 4. ENDPOINT PARA ASCENDER DE HUÉSPED A PROPIETARIO
+    @PutMapping("/ascender")
+    public ResponseEntity<?> ascenderAPropietario(@RequestBody java.util.Map<String, String> request) {
+        try {
+            // Angular nos enviará un JSON simple: {"email": "usuario@test.com"}
+            String email = request.get("email");
+            
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"El email es obligatorio\"}");
+            }
+
+            // Llamamos al servicio y recibimos el nuevo token
+            LoginResponse response = authService.ascenderAPropietario(email);
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("{\"error\": \"" + e.getMessage() + "\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"error\": \"Error interno al intentar ascender al usuario\"}");
+        }
+    }
+    
 }

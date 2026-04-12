@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { BehaviorSubject,Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,6 +12,22 @@ export class AuthService {
 
   // Inyectamos el HttpClient de Angular (la forma moderna)
   private http = inject(HttpClient);
+  
+  // 🔥 1. EL SEMÁFORO REACTIVO
+  private authStatus = new BehaviorSubject<boolean>(this.checkToken());
+  // El Navbar se suscribirá a esta variable
+  isLoggedIn$ = this.authStatus.asObservable(); 
+
+  // Comprueba si hay token al arrancar
+  private checkToken(): boolean {
+    return !!localStorage.getItem('jwt_token');
+  }
+
+  // Llama a esto cuando el login ES EXITOSO
+  iniciarSesion(token: string) {
+    localStorage.setItem('jwt_token', token);
+    this.authStatus.next(true); // Pone el semáforo en verde
+  }
 
   constructor() { }
 
@@ -43,6 +59,7 @@ export class AuthService {
   // Para cerrar sesión borrando el token
   logout(): void {
     localStorage.removeItem('jwt_token');
+    this.authStatus.next(false);
   }
   // ==========================================
   // LECTOR DE TOKEN (Decodificador JWT)
@@ -73,4 +90,13 @@ export class AuthService {
       return null;
     }
   }
+  ascenderAPropietario(email: string): Observable<any> {
+  return this.http.put(`${this.apiUrl}/ascender`, { email }).pipe(
+    tap((respuesta: any) => {
+      // El backend nos devuelve un nuevo token con el rol actualizado.
+      // Lo pisamos en el localStorage para que el Navbar se actualice.
+      this.iniciarSesion(respuesta.nuevoToken);
+    })
+  );
+}
 }
